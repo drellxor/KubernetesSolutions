@@ -6,11 +6,10 @@ course.
 
 ## Layout
 
-Each part lives in its own directory. Exercise-specific files go under
-`part-N/exercise-N.M/`.
+Each application lives in its own directory at the repository root and is
+reused across the exercises that build on it.
 
 ```
-part-1/
-part-2/
+log_output/
 ...
 ```
