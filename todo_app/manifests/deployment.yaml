@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-app-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-app-dep
+  template:
+    metadata:
+      labels:
+        app: todo-app-dep
+    spec:
+      containers:
+        - name: todo-app
+          image: todo-app:1.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PORT
+              value: "3000"
+          ports:
+            - containerPort: 3000
