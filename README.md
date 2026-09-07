@@ -4,12 +4,8 @@ My exercise solutions for the University of Helsinki
 [DevOps with Kubernetes 2026](https://courses.mooc.fi/org/uh-cs/courses/devops-with-kubernetes-2026)
 course.
 
-## Layout
+## Exercises
 
-Each application lives in its own directory at the repository root and is
-reused across the exercises that build on it.
+### Chapter 2
 
-```
-log_output/
-...
-```
+- [1.1.](https://github.com/drellxor/KubernetesSolutions/tree/1.1/log_output)
