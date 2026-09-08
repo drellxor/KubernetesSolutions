@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Todo app</title>
+  </head>
+  <body>
+    <h1>Todos</h1>
+    <ul>
+      {% for todo in todos %}
+      <li>{{ todo }}</li>
+      {% else %}
+      <li><em>Nothing to do.</em></li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
