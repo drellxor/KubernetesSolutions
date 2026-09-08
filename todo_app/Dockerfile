@@ -11,8 +11,10 @@ COPY app.py .
 COPY templates/ templates/
 
 ENV PORT=8000
+ENV IMAGE_FILE=/usr/src/app/files/image.jpg
 EXPOSE 8000
 
-USER nobody
+# No USER directive: the app caches the image into a mounted volume, which
+# Kubernetes creates root-owned. Set securityContext.fsGroup to run non-root.
 
 CMD ["python3", "app.py"]

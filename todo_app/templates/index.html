@@ -6,6 +6,9 @@
     <title>Todo app</title>
   </head>
   <body>
+    {% if image %}
+    <img src="{{ image }}" alt="Hourly image" style="max-width: 100%" />
+    {% endif %}
     <h1>Todos</h1>
     <ul>
       {% for todo in todos %}

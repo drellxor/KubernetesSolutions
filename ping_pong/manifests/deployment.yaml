@@ -13,12 +13,12 @@ spec:
         app: ping-pong
     spec:
       volumes:
-        - name: shared-log-output
+        - name: shared-volume
           persistentVolumeClaim:
-            claimName: log-output-claim
+            claimName: generic-claim
       containers:
         - name: ping-pong
           image: ping-pong:2.0
           volumeMounts:
             - mountPath: /usr/src/app/files
-              name: shared-log-output
+              name: shared-volume
