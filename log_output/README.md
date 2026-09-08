@@ -19,10 +19,17 @@ Both use the same image; the container's `command` selects which one runs.
 - `PORT` — port the server listens on, default 8000.
 - `LOG_FILE` — the shared file, default `/usr/src/app/files/log.txt`.
   Both containers must agree on this path and mount the same volume there.
+- `COUNTER_FILE` — the ping-pong request count, written by the ping_pong app,
+  default `/usr/src/app/files/pingpong.txt`.
 
 ## Endpoints
 
-- `GET /` and `GET /status` — the file contents, as plain text.
+- `GET /` and `GET /status` — the latest log line and the ping-pong count:
+
+```
+2020-03-30T12:15:17.705Z: 8523ecb1-c716-4cb6-a044-b9e83bb98e43.
+Ping / Pongs: 3
+```
 
 ## Run locally
 

@@ -13,17 +13,18 @@ spec:
         app: log-output
     spec:
       volumes:
-        - name: shared-image
-          emptyDir: {}
+        - name: shared-log-output
+          persistentVolumeClaim:
+            claimName: log-output-claim
       containers:
         - name: log-output-server
-          image: log-output:3.0
+          image: log-output:4.0
           volumeMounts:
             - mountPath: /usr/src/app/files
-              name: shared-image
+              name: shared-log-output
         - name: log-output-writer
-          image: log-output:3.0
+          image: log-output:4.0
           volumeMounts:
             - mountPath: /usr/src/app/files
-              name: shared-image
+              name: shared-log-output
           command: ["python3", "writer.py"]

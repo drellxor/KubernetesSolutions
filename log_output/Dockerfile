@@ -11,6 +11,7 @@ COPY writer.py server.py ./
 
 ENV PORT=8000
 ENV LOG_FILE=/usr/src/app/files/log.txt
+ENV COUNTER_FILE=/usr/src/app/files/pingpong.txt
 EXPOSE 8000
 
 # No USER directive: the writer needs to create files in the mounted volume,
