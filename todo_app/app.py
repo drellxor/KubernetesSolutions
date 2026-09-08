@@ -22,6 +22,7 @@ templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
 todos = [
     "Read the course material",
     "Write a todo app",
+    "Deploy it to Kubernetes",
 ]
 
 
