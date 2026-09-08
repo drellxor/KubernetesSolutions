@@ -12,6 +12,18 @@ spec:
       labels:
         app: log-output
     spec:
+      volumes:
+        - name: shared-image
+          emptyDir: {}
       containers:
-        - name: log-output
-          image: log-output:1.0
+        - name: log-output-server
+          image: log-output:3.0
+          volumeMounts:
+            - mountPath: /usr/src/app/files
+              name: shared-image
+        - name: log-output-writer
+          image: log-output:3.0
+          volumeMounts:
+            - mountPath: /usr/src/app/files
+              name: shared-image
+          command: ["python3", "writer.py"]
