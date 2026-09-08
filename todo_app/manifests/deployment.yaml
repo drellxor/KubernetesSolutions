@@ -6,11 +6,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: todo-app-dep
+      app: todo-app
   template:
     metadata:
       labels:
-        app: todo-app-dep
+        app: todo-app
     spec:
       containers:
         - name: todo-app
