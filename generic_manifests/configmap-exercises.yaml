@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: exercises-config
+  namespace: exercises
+data:
+  message: "This is config message"
+  information.txt: |
+    This is a config file

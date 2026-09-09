@@ -17,14 +17,29 @@ spec:
         - name: shared-volume
           persistentVolumeClaim:
             claimName: generic-claim
+        - name: config
+          configMap:
+            name: exercises-config
+            items:
+              - key: "information.txt"
+                path: "information.txt"
       containers:
         - name: log-output-server
-          image: log-output:5.0
+          image: log-output:7.0
+          env:
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: exercises-config
+                  key: message
           volumeMounts:
             - mountPath: /usr/src/app/files
               name: shared-volume
+            - mountPath: /config
+              name: config
+              readOnly: true
         - name: log-output-writer
-          image: log-output:5.0
+          image: log-output:7.0
           volumeMounts:
             - mountPath: /usr/src/app/files
               name: shared-volume

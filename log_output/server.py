@@ -10,7 +10,8 @@ from fastapi.responses import PlainTextResponse
 
 DEFAULT_PORT = 8000
 LOG_FILE = Path(os.getenv("LOG_FILE", "/usr/src/app/files/log.txt"))
-
+CONFIG_FILE = Path(os.getenv("CONFIG_FILE", "/config/information.txt"))
+MESSAGE = os.getenv("MESSAGE", '')
 app = FastAPI(title="log-output")
 
 
@@ -21,6 +22,12 @@ def latest_log_line() -> str:
         return "no output yet"
     return lines[-1] if lines else "no output yet"
 
+def config_file_content() -> str:
+    try:
+        with open(CONFIG_FILE, "r") as file:
+            return file.read()
+    except FileNotFoundError:
+        return "no config file yet"
 
 async def pingpong_count() -> int:
     try:
@@ -35,7 +42,10 @@ async def pingpong_count() -> int:
 @app.get("/", response_class=PlainTextResponse)
 @app.get("/status", response_class=PlainTextResponse)
 async def read_status() -> str:
-    return f"{latest_log_line()}.\nPing / Pongs: {await pingpong_count()}"
+    return f"""file content: {config_file_content()}env variable: MESSAGE={MESSAGE}
+{latest_log_line()}.
+Ping / Pongs: {await pingpong_count()}
+"""
 
 
 def main() -> None:
