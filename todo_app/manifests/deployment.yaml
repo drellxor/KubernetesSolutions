@@ -19,13 +19,34 @@ spec:
             claimName: project-claim
       containers:
         - name: todo-app
-          image: todo-app:5.0
+          image: todo-app:6.0
           imagePullPolicy: IfNotPresent
           env:
-            - name: PORT
-              value: "3000"
-          ports:
-            - containerPort: 3000
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: server_port
+                  name: project-config
+            - name: IMAGE_FILE
+              valueFrom:
+                configMapKeyRef:
+                  key: image_file
+                  name: project-config
+            - name: IMAGE_MAX_AGE_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  key: image_max_age_seconds
+                  name: project-config
+            - name: IMAGE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: image_url
+                  name: project-config
+            - name: TODO_BACKEND_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: todo_backend_url
+                  name: project-config
           volumeMounts:
             - mountPath: /usr/src/app/files
               name: shared-volume

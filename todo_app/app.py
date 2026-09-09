@@ -11,10 +11,10 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-DEFAULT_PORT = 8000
+PORT = int(os.getenv("SERVER_PORT", 8000))
 IMAGE_FILE = Path(os.getenv("IMAGE_FILE", "/usr/src/app/files/image.jpg"))
-IMAGE_MAX_AGE_SECONDS = 600
-IMAGE_URL = "https://picsum.photos/1200"
+IMAGE_MAX_AGE_SECONDS = int(os.getenv("IMAGE_MAX_AGE_SECONDS", 600))
+IMAGE_URL = os.getenv("IMAGE_URL", "https://picsum.photos/1200")
 TODO_BACKEND_URL = os.getenv("TODO_BACKEND_URL", "http://todo-backend-svc:2349")
 
 app = FastAPI(title="todo-app")
@@ -79,9 +79,8 @@ async def index(request: Request) -> HTMLResponse:
 
 
 def main() -> None:
-    port = int(os.getenv("PORT", DEFAULT_PORT))
-    print(f"Server started in port {port}", flush=True)
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    print(f"Server started in port {PORT}", flush=True)
+    uvicorn.run(app, host="0.0.0.0", port=PORT)
 
 
 if __name__ == "__main__":

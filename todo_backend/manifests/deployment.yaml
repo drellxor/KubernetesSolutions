@@ -15,10 +15,16 @@ spec:
     spec:
       containers:
         - name: todo-backend
-          image: todo-backend:1.0
+          image: todo-backend:2.0
           imagePullPolicy: IfNotPresent
           env:
-            - name: PORT
-              value: "3000"
-          ports:
-            - containerPort: 3000
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: server_port
+                  name: project-config
+            - name: MAX_TODO_LENGTH
+              valueFrom:
+                configMapKeyRef:
+                  key: max_todo_length
+                  name: project-config

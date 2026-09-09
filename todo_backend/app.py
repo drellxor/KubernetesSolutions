@@ -6,8 +6,8 @@ import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
-DEFAULT_PORT = 8000
-MAX_TODO_LENGTH = 140
+PORT = int(os.getenv("SERVER_PORT", 8000))
+MAX_TODO_LENGTH = int(os.getenv("MAX_TODO_LENGTH", 140))
 
 app = FastAPI(title="todo-backend")
 
@@ -34,9 +34,8 @@ async def create_todo(new_todo: NewTodo) -> str:
 
 
 def main() -> None:
-    port = int(os.getenv("PORT", DEFAULT_PORT))
-    print(f"Server started in port {port}", flush=True)
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    print(f"Server started in port {PORT}", flush=True)
+    uvicorn.run(app, host="0.0.0.0", port=PORT)
 
 
 if __name__ == "__main__":

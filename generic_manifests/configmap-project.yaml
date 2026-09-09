@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: project-config
+  namespace: project
+data:
+  server_port: "3000"
+  image_file: "/usr/src/app/files/image.jpg"
+  image_max_age_seconds: "600"
+  image_url: "https://picsum.photos/1200"
+  todo_backend_url: "http://todo-backend-svc:2349"
+  max_todo_length: "140"
