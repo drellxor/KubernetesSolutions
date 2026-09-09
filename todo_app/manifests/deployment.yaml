@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: todo-app-dep
+  namespace: project
 spec:
   replicas: 1
   selector:
@@ -15,7 +16,7 @@ spec:
       volumes:
         - name: shared-volume
           persistentVolumeClaim:
-            claimName: generic-claim
+            claimName: project-claim
       containers:
         - name: todo-app
           image: todo-app:5.0

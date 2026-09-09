@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: project-claim
+  namespace: project
+spec:
+  storageClassName: cn-project-pv # this is the name of the persistent volume we are claiming
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
