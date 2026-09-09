@@ -20,17 +20,4 @@ spec:
             name: todo-backend-svc
             port:
               number: 2349
-      - path: /pingpong
-        pathType: Prefix
-        backend:
-          service:
-            name: ping-pong-svc
-            port:
-              number: 2348
-      - path: /status
-        pathType: Prefix
-        backend:
-          service:
-            name: log-output-svc
-            port:
-              number: 2346
+

@@ -2,6 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: generic-claim
+  namespace: exercises
 spec:
   storageClassName: cn-generic-pv # this is the name of the persistent volume we are claiming
   accessModes:
