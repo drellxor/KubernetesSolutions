@@ -1,6 +1,7 @@
 # todo_app
 
-Web server that will grow into a todo application. On startup it prints
+Serves the todo page. The todos themselves live in the todo_backend service,
+which this app reads from and posts to. On startup it prints
 `Server started in port NNNN`.
 
 The page shows a random picture from [Lorem Picsum](https://picsum.photos),
@@ -9,6 +10,8 @@ cached on disk and refreshed when it is more than 10 minutes old.
 ## Configuration
 
 - `PORT` — port the server listens on, default 8000.
+- `TODO_BACKEND_URL` — where the todo_backend service lives, default
+  `http://todo-backend-svc:2349`.
 - `IMAGE_FILE` — where the cached picture is stored, default
   `/usr/src/app/files/image.jpg`. Mount a volume at that directory so the
   cache survives restarts.

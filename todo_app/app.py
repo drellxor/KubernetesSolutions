@@ -15,15 +15,21 @@ DEFAULT_PORT = 8000
 IMAGE_FILE = Path(os.getenv("IMAGE_FILE", "/usr/src/app/files/image.jpg"))
 IMAGE_MAX_AGE_SECONDS = 600
 IMAGE_URL = "https://picsum.photos/1200"
+TODO_BACKEND_URL = os.getenv("TODO_BACKEND_URL", "http://todo-backend-svc:2349")
 
 app = FastAPI(title="todo-app")
 templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
 
-todos = [
-    "Read the course material",
-    "Write a todo app",
-    "Deploy it to Kubernetes",
-]
+
+async def read_todos() -> list[str]:
+    """The todos held by the backend. An empty list if it cannot be reached."""
+    try:
+        async with httpx.AsyncClient(timeout=5) as client:
+            response = await client.get(f"{TODO_BACKEND_URL}/todos")
+            response.raise_for_status()
+        return response.json()
+    except (httpx.HTTPError, ValueError):
+        return []
 
 
 def image_is_stale() -> bool:
@@ -68,7 +74,7 @@ async def index(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={"todos": todos, "image": await image_data_uri()},
+        context={"todos": await read_todos(), "image": await image_data_uri()},
     )
 
 

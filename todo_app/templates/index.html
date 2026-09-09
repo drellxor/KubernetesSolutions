@@ -38,7 +38,7 @@
 
     <h1>Todos</h1>
 
-    <form>
+    <form id="new-todo">
       <input
         type="text"
         name="todo"
@@ -57,5 +57,23 @@
       <li><em>Nothing to do.</em></li>
       {% endfor %}
     </ul>
+
+    <script>
+      // The browser posts straight to todo-backend, which the ingress serves
+      // at /todos, then reloads so the server renders the updated list.
+      document.getElementById("new-todo").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const input = event.target.elements.todo;
+        const response = await fetch("/todos", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ todo: input.value.trim() }),
+        });
+        if (response.ok) {
+          input.value = "";
+          location.reload();
+        }
+      });
+    </script>
   </body>
 </html>
