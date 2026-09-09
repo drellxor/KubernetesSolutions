@@ -18,12 +18,12 @@ spec:
             claimName: generic-claim
       containers:
         - name: log-output-server
-          image: log-output:4.0
+          image: log-output:5.0
           volumeMounts:
             - mountPath: /usr/src/app/files
               name: shared-volume
         - name: log-output-writer
-          image: log-output:4.0
+          image: log-output:5.0
           volumeMounts:
             - mountPath: /usr/src/app/files
               name: shared-volume

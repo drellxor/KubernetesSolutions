@@ -34,6 +34,9 @@ async def pingpong() -> str:
     COUNTER_FILE.write_text(f"{counter}\n")
     return response
 
+@app.get("/pings", response_class=PlainTextResponse)
+async def pings() -> str:
+    return f'{counter}'
 
 def main() -> None:
     port = int(os.getenv("PORT", DEFAULT_PORT))

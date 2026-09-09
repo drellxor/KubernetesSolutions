@@ -2,6 +2,7 @@
 
 import os
 from pathlib import Path
+import httpx
 
 import uvicorn
 from fastapi import FastAPI
@@ -9,7 +10,6 @@ from fastapi.responses import PlainTextResponse
 
 DEFAULT_PORT = 8000
 LOG_FILE = Path(os.getenv("LOG_FILE", "/usr/src/app/files/log.txt"))
-COUNTER_FILE = Path(os.getenv("COUNTER_FILE", "/usr/src/app/files/pingpong.txt"))
 
 app = FastAPI(title="log-output")
 
@@ -22,17 +22,20 @@ def latest_log_line() -> str:
     return lines[-1] if lines else "no output yet"
 
 
-def pingpong_count() -> int:
+async def pingpong_count() -> int:
     try:
-        return int(COUNTER_FILE.read_text().strip())
-    except (FileNotFoundError, ValueError):
+        async with httpx.AsyncClient() as client:
+            response = await client.get("http://ping-pong-svc:2348/pings")
+            response.raise_for_status()
+        return int(response.text)
+    except (httpx.HTTPError, ValueError):
         return 0
 
 
 @app.get("/", response_class=PlainTextResponse)
 @app.get("/status", response_class=PlainTextResponse)
 async def read_status() -> str:
-    return f"{latest_log_line()}.\nPing / Pongs: {pingpong_count()}"
+    return f"{latest_log_line()}.\nPing / Pongs: {await pingpong_count()}"
 
 
 def main() -> None:
