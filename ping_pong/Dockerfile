@@ -9,11 +9,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app.py .
 
-ENV PORT=8000
-ENV COUNTER_FILE=/usr/src/app/files/pingpong.txt
+ENV SERVER_PORT=8000
 EXPOSE 8000
 
-# No USER directive: the app writes the counter into a mounted volume, which
-# Kubernetes creates root-owned. Set securityContext.fsGroup to run non-root.
+USER nobody
 
 CMD ["python3", "app.py"]

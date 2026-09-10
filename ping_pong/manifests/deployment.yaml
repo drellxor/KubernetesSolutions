@@ -14,12 +14,16 @@ spec:
         app: ping-pong
     spec:
       volumes:
-        - name: shared-volume
-          persistentVolumeClaim:
-            claimName: generic-claim
+        - name: config
+          configMap:
+            name: exercises-config
+            items:
+              - key: ping_pong_db.config
+                path: ping_pong_db.config
       containers:
         - name: ping-pong
-          image: ping-pong:3.0
+          image: ping-pong:5.0
           volumeMounts:
-            - mountPath: /usr/src/app/files
-              name: shared-volume
+            - mountPath: /config
+              name: config
+

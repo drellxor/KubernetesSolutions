@@ -7,3 +7,9 @@ data:
   message: "This is config message"
   information.txt: |
     This is a config file
+  ping_pong_db.config: |
+    db_host=postgres-svc
+    db_port=5432
+    db=ping_pong
+    user=postgres
+    password=postgres
