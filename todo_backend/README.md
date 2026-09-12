@@ -27,6 +27,16 @@ docker run --rm -e TODO_BACKEND_URL=... todo-backend python3 create_todo.py
 The app creates its `todos` table on startup, retrying while the database
 comes up.
 
+## Logging
+
+Every todo is logged: accepted ones at INFO, rejected ones at WARNING with the
+reason, so both show up in `kubectl logs` and in Grafana.
+
+```
+INFO:     Created todo: 'Buy milk'
+WARNING:  Rejected todo (150 characters): 'xxx…' — String should have at most 140 characters
+```
+
 ## Run locally
 
 Start a database, then:
