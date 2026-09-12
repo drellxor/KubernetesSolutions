@@ -11,7 +11,7 @@ spec:
         spec:
           containers:
             - name: create-todo
-              image: todo-backend:4.0
+              image: todo-backend:5.0
               imagePullPolicy: IfNotPresent
               command: ["python3", "create_todo.py"]
               envFrom:
