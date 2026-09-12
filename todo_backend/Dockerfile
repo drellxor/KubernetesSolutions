@@ -7,9 +7,9 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app.py .
+COPY app.py create_todo.py ./
 
-ENV PORT=8000
+ENV SERVER_PORT=8000
 EXPOSE 8000
 
 USER nobody
