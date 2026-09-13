@@ -76,11 +76,6 @@ app = FastAPI(title="ping-pong", lifespan=lifespan)
 
 
 @app.get("/", response_class=PlainTextResponse)
-async def index() -> str:
-    return "ping-pong"
-
-
-@app.get("/pingpong", response_class=PlainTextResponse)
 async def pingpong() -> str:
     # One statement, so concurrent requests cannot hand out the same number.
     counter = await app.state.pool.fetchval(
