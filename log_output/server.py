@@ -32,7 +32,7 @@ def config_file_content() -> str:
 async def pingpong_count() -> int:
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.get("http://ping-pong-svc:2348/pings")
+            response = await client.get("http://ping-pong-svc/pings")
             response.raise_for_status()
         return int(response.text)
     except (httpx.HTTPError, ValueError):
