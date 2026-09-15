@@ -2,12 +2,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: todo-app-dep
-  namespace: project
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: todo-app
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -27,3 +28,4 @@ spec:
           volumeMounts:
             - mountPath: /usr/src/app/files
               name: shared-volume
+
