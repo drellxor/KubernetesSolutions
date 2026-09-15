@@ -94,6 +94,10 @@ async def log_rejected_todo(
     )
     return await request_validation_exception_handler(request, exc)
 
+@app.get("/")
+async def root() -> str:
+    return "OK"
+
 
 @app.get("/todos")
 async def read_todos() -> list[str]:

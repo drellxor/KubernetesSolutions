@@ -41,3 +41,4 @@ course.
 - [3.2.](https://github.com/drellxor/KubernetesSolutions/tree/3.2/log_output)
 - [3.3.](https://github.com/drellxor/KubernetesSolutions/tree/3.3/ping_pong)
 - [3.4.](https://github.com/drellxor/KubernetesSolutions/tree/3.4/ping_pong)
+- [3.5.](https://github.com/drellxor/KubernetesSolutions/tree/3.5/todo_app)

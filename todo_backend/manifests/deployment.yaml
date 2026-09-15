@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: todo-backend
-          image: todo-backend:5.0
+          image: PROJECT/BACKEND
           imagePullPolicy: IfNotPresent
           envFrom:
             - configMapRef:
