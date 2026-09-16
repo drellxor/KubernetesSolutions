@@ -28,4 +28,10 @@ spec:
           volumeMounts:
             - mountPath: /usr/src/app/files
               name: shared-volume
-
+          resources:
+            requests:
+              cpu: "15m"
+              memory: "64Mi"
+            limits:
+              cpu: "100m"
+              memory: "150Mi"

@@ -25,6 +25,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: project-config
+          resources:
+            requests:
+              cpu: "5m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "196Mi"
   volumeClaimTemplates:
     - metadata:
         name: postgres-data-storage
