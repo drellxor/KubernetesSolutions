@@ -19,6 +19,13 @@ but an untested restore path is the thing that actually loses data. Cloud SQL
 is the better default for anything that matters; the self-hosted setup is
 cheaper, portable, and fine for this course.
 
+## Logging
+
+Application logs reach Google Cloud Logging, where both the request lines and
+the backend's own messages are searchable — here a todo being created:
+
+![Cloud Logging showing the todo backend's logs](docs/images/gcp-logging.png)
+
 ## Exercises
 
 ### Chapter 2
@@ -63,3 +70,4 @@ cheaper, portable, and fine for this course.
 - [3.9.](https://github.com/drellxor/KubernetesSolutions/tree/3.9#database-cloud-sql-or-self-hosted-postgres)
 - [3.10.](https://github.com/drellxor/KubernetesSolutions/tree/3.10/todo_backend/manifests)
 - [3.11.](https://github.com/drellxor/KubernetesSolutions/tree/3.11/todo_app/manifests)
+- [3.12.](https://github.com/drellxor/KubernetesSolutions/tree/3.12#logging)
