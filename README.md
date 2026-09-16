@@ -4,6 +4,21 @@ My exercise solutions for the University of Helsinki
 [DevOps with Kubernetes 2026](https://courses.mooc.fi/org/uh-cs/courses/devops-with-kubernetes-2026)
 course.
 
+## Database: Cloud SQL or self-hosted Postgres
+
+| | Cloud SQL (DBaaS) | Postgres in the cluster |
+|---|---|---|
+| **Setup** | Create the instance, grant access, point the app at it. No manifests. | StatefulSet, PVC and a headless Service — already written, and it runs anywhere. |
+| **Cost** | A managed instance billed whether or not it is used, on top of the cluster. | Only the persistent disk; the nodes are already paid for. |
+| **Maintenance** | Patching, minor upgrades and failover are Google's problem. | Ours: version upgrades, tuning, and a single replica with no failover. |
+| **Backups** | Automated daily backups and point-in-time recovery, restored from the console or one command. | Nothing by default. Disk snapshots or a `pg_dump` CronJob, and a restore we have to write and test ourselves. |
+| **Lock-in** | Tied to Google Cloud. | Runs on any cluster, including k3d locally. |
+
+Backups are the honest dividing line: everything else is a matter of effort,
+but an untested restore path is the thing that actually loses data. Cloud SQL
+is the better default for anything that matters; the self-hosted setup is
+cheaper, portable, and fine for this course.
+
 ## Exercises
 
 ### Chapter 2
@@ -45,3 +60,4 @@ course.
 - [3.6.](https://github.com/drellxor/KubernetesSolutions/tree/3.6/.github/workflows)
 - [3.7.](https://github.com/drellxor/KubernetesSolutions/tree/3.7/.github/workflows)
 - [3.8.](https://github.com/drellxor/KubernetesSolutions/tree/3.8/.github/workflows)
+- [3.9.](https://github.com/drellxor/KubernetesSolutions/tree/3.9#database-cloud-sql-or-self-hosted-postgres)
