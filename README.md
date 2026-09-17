@@ -26,6 +26,19 @@ the backend's own messages are searchable — here a todo being created:
 
 ![Cloud Logging showing the todo backend's logs](docs/images/gcp-logging.png)
 
+## Prometheus
+
+Pods created by StatefulSets in the monitoring namespace:
+
+```promql
+sum(kube_pod_info{namespace='monitoring', created_by_kind='StatefulSet'})
+```
+
+![The query in the Prometheus UI](docs/images/prometheus-statefulset-query.png)
+
+`kube_pod_info` carries one series per pod, labelled with `created_by_kind`, so
+filtering on that and summing gives the pod count.
+
 ## Exercises
 
 ### Chapter 2
@@ -76,3 +89,4 @@ the backend's own messages are searchable — here a todo being created:
 
 - [4.1.](https://github.com/drellxor/KubernetesSolutions/tree/4.1/ping_pong)
 - [4.2.](https://github.com/drellxor/KubernetesSolutions/tree/4.2/todo_app)
+- [4.3.](https://github.com/drellxor/KubernetesSolutions/tree/4.3#prometheus)
