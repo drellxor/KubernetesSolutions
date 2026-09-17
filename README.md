@@ -75,3 +75,4 @@ the backend's own messages are searchable — here a todo being created:
 ### Chapter 5
 
 - [4.1.](https://github.com/drellxor/KubernetesSolutions/tree/4.1/ping_pong)
+- [4.2.](https://github.com/drellxor/KubernetesSolutions/tree/4.2/todo_app)
