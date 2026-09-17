@@ -91,3 +91,4 @@ filtering on that and summing gives the pod count.
 - [4.2.](https://github.com/drellxor/KubernetesSolutions/tree/4.2/todo_app)
 - [4.3.](https://github.com/drellxor/KubernetesSolutions/tree/4.3#prometheus)
 - [4.4.](https://github.com/drellxor/KubernetesSolutions/tree/4.4/ping_pong/manifests)
+- [4.5.](https://github.com/drellxor/KubernetesSolutions/tree/4.5/todo_app)
