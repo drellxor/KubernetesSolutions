@@ -9,7 +9,7 @@ import asyncpg
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.exception_handlers import request_validation_exception_handler
-from fastapi.exceptions import RequestValidationError
+from fastapi.exceptions import RequestValidationError, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
@@ -97,6 +97,15 @@ async def log_rejected_todo(
 @app.get("/")
 async def root() -> str:
     return "OK"
+
+
+@app.get("/healthz")
+async def health() -> str:
+    try:
+        await app.state.pool.fetchval("SELECT 1")
+    except Exception:
+        raise HTTPException(status_code=503, detail="database unavailable")
+    return "ok"
 
 
 @app.get("/todos")

@@ -29,6 +29,11 @@
         font: inherit;
         padding: 0.4rem 1rem;
       }
+      #break {
+        border-color: #a33;
+        color: #a33;
+        margin-top: 2rem;
+      }
     </style>
   </head>
   <body>
@@ -58,6 +63,8 @@
       {% endfor %}
     </ul>
 
+    <button id="break" type="button">Break the app</button>
+
     <script>
       // The browser posts straight to todo-backend, which the ingress serves
       // at /todos, then reloads so the server renders the updated list.
@@ -73,6 +80,12 @@
           input.value = "";
           location.reload();
         }
+      });
+
+      // Stops the app responding, so the probes start failing.
+      document.getElementById("break").addEventListener("click", async () => {
+        await fetch("/break", { method: "POST" });
+        location.reload();
       });
     </script>
   </body>

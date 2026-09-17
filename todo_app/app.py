@@ -7,9 +7,10 @@ from pathlib import Path
 
 import httpx
 import uvicorn
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from starlette.responses import JSONResponse
 
 PORT = int(os.getenv("SERVER_PORT", 8000))
 IMAGE_FILE = Path(os.getenv("IMAGE_FILE", "/usr/src/app/files/image.jpg"))
@@ -20,6 +21,7 @@ TODO_BACKEND_URL = os.getenv("TODO_BACKEND_URL", "http://todo-backend-svc:2349")
 app = FastAPI(title="todo-app")
 templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
 
+is_broken = False
 
 async def read_todos() -> list[str]:
     """The todos held by the backend. An empty list if it cannot be reached."""
@@ -71,11 +73,27 @@ async def image_data_uri() -> str | None:
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request) -> HTMLResponse:
+    if is_broken:
+        raise HTTPException(status_code=500, detail="Service is unavailable")
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={"todos": await read_todos(), "image": await image_data_uri()},
     )
+
+
+@app.get("/healthz")
+async def healthz() -> str:
+    if is_broken:
+        raise HTTPException(status_code=500, detail="Service is unavailable")
+    return "Ok"
+
+
+@app.post("/break")
+async def break_app() -> str:
+    global is_broken
+    is_broken = True
+    return "Ok"
 
 
 def main() -> None:
