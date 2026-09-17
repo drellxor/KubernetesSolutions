@@ -29,6 +29,31 @@
         font: inherit;
         padding: 0.4rem 1rem;
       }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      li {
+        align-items: center;
+        background: #f6f6f6;
+        border-left: 4px solid #4a4;
+        display: flex;
+        gap: 1rem;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        padding: 0.6rem 0.9rem;
+      }
+      li.done {
+        border-left-color: #bbb;
+      }
+      li.done span:first-child {
+        color: #777;
+        text-decoration: line-through;
+      }
+      .label {
+        color: #4a4;
+        font-weight: bold;
+      }
       #break {
         border-color: #a33;
         color: #a33;
@@ -57,7 +82,14 @@
 
     <ul>
       {% for todo in todos %}
-      <li>{{ todo }}</li>
+      <li class="{{ 'done' if todo.done }}">
+        <span>{{ todo.todo }}</span>
+        {% if todo.done %}
+        <span class="label">Done</span>
+        {% else %}
+        <button type="button" class="mark" data-id="{{ todo.id }}">Mark done</button>
+        {% endif %}
+      </li>
       {% else %}
       <li><em>Nothing to do.</em></li>
       {% endfor %}
@@ -80,6 +112,18 @@
           input.value = "";
           location.reload();
         }
+      });
+
+      // Mark done posts the new state to the backend, then re-renders.
+      document.querySelectorAll("button.mark").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const response = await fetch(`/todos/${button.dataset.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ done: true }),
+          });
+          if (response.ok) location.reload();
+        });
       });
 
       // Stops the app responding, so the probes start failing.

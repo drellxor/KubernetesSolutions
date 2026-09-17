@@ -56,9 +56,15 @@ async def connect() -> asyncpg.Pool:
             f"""
             CREATE TABLE IF NOT EXISTS todos (
                 id SERIAL PRIMARY KEY,
-                todo VARCHAR({MAX_TODO_LENGTH}) NOT NULL
+                todo VARCHAR({MAX_TODO_LENGTH}) NOT NULL,
+                done BOOLEAN NOT NULL DEFAULT FALSE
             )
             """
+        )
+        # CREATE TABLE IF NOT EXISTS leaves an older table untouched, so add
+        # the column separately for databases that predate it.
+        await connection.execute(
+            "ALTER TABLE todos ADD COLUMN IF NOT EXISTS done BOOLEAN NOT NULL DEFAULT FALSE"
         )
 
     return pool
@@ -76,6 +82,16 @@ app = FastAPI(title="todo-backend", lifespan=lifespan)
 
 class NewTodo(BaseModel):
     todo: str = Field(min_length=1, max_length=MAX_TODO_LENGTH)
+
+
+class TodoUpdate(BaseModel):
+    done: bool
+
+
+class Todo(BaseModel):
+    id: int
+    todo: str
+    done: bool
 
 
 @app.exception_handler(RequestValidationError)
@@ -109,18 +125,32 @@ async def health() -> str:
 
 
 @app.get("/todos")
-async def read_todos() -> list[str]:
-    rows = await app.state.pool.fetch("SELECT todo FROM todos ORDER BY id")
-    return [row["todo"] for row in rows]
+async def read_todos() -> list[Todo]:
+    rows = await app.state.pool.fetch("SELECT id, todo, done FROM todos ORDER BY id")
+    return [Todo(**dict(row)) for row in rows]
 
 
 @app.post("/todos", status_code=201)
-async def create_todo(new_todo: NewTodo) -> str:
-    await app.state.pool.execute(
-        "INSERT INTO todos (todo) VALUES ($1)", new_todo.todo
+async def create_todo(new_todo: NewTodo) -> Todo:
+    row = await app.state.pool.fetchrow(
+        "INSERT INTO todos (todo) VALUES ($1) RETURNING id, todo, done", new_todo.todo
     )
     logger.info("Created todo: %r", new_todo.todo)
-    return new_todo.todo
+    return Todo(**dict(row))
+
+
+@app.put("/todos/{todo_id}")
+async def update_todo(todo_id: int, update: TodoUpdate) -> Todo:
+    row = await app.state.pool.fetchrow(
+        "UPDATE todos SET done = $1 WHERE id = $2 RETURNING id, todo, done",
+        update.done,
+        todo_id,
+    )
+    if row is None:
+        raise HTTPException(status_code=404, detail="no such todo")
+
+    logger.info("Todo %s marked %s", todo_id, "done" if update.done else "not done")
+    return Todo(**dict(row))
 
 
 def main() -> None:

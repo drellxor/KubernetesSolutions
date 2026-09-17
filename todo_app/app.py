@@ -23,7 +23,7 @@ templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
 
 is_broken = False
 
-async def read_todos() -> list[str]:
+async def read_todos() -> list[dict]:
     """The todos held by the backend. An empty list if it cannot be reached."""
     try:
         async with httpx.AsyncClient(timeout=5) as client:
