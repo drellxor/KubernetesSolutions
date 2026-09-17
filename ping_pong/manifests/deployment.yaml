@@ -22,7 +22,16 @@ spec:
                 path: ping_pong_db.config
       containers:
         - name: ping-pong
-          image: drellxor/ping-pong:7.0
+          image: drellxor/ping-pong:8.0
           volumeMounts:
             - mountPath: /config
               name: config
+          ports:
+            - containerPort: 8000
+              name: http
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            httpGet:
+              port: http
+              path: /healthz

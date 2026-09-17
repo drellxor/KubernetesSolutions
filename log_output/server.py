@@ -5,13 +5,14 @@ from pathlib import Path
 import httpx
 
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import PlainTextResponse
 
 DEFAULT_PORT = 8000
 LOG_FILE = Path(os.getenv("LOG_FILE", "/usr/src/app/files/log.txt"))
 CONFIG_FILE = Path(os.getenv("CONFIG_FILE", "/config/information.txt"))
 MESSAGE = os.getenv("MESSAGE", '')
+PING_PONG_URL = os.getenv("PING_PONG_URL", "http://ping-pong-svc/pings")
 app = FastAPI(title="log-output")
 
 
@@ -32,11 +33,26 @@ def config_file_content() -> str:
 async def pingpong_count() -> int:
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.get("http://ping-pong-svc/pings")
+            response = await client.get(PING_PONG_URL)
             response.raise_for_status()
         return int(response.text)
     except (httpx.HTTPError, ValueError):
         return 0
+
+
+@app.get("/healthz", response_class=PlainTextResponse)
+async def healthz() -> str:
+    """Ready only while ping-pong is reachable, so failures are not hidden."""
+    try:
+        async with httpx.AsyncClient(timeout=5) as client:
+            response = await client.get(PING_PONG_URL)
+            response.raise_for_status()
+    except httpx.HTTPError as error:
+        raise HTTPException(
+            status_code=503, detail="ping-pong unavailable"
+        ) from error
+
+    return "ok"
 
 
 @app.get("/", response_class=PlainTextResponse)

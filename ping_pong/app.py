@@ -7,7 +7,7 @@ from pathlib import Path
 
 import asyncpg
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import PlainTextResponse
 
 PORT = int(os.getenv("SERVER_PORT", 8000))
@@ -90,6 +90,15 @@ async def pings() -> str:
         "SELECT counter FROM pingpong WHERE id = 1"
     )
     return f"{counter}"
+
+
+@app.get("/healthz")
+async def healthz():
+    try:
+        await app.state.pool.fetchval("SELECT 1")
+    except Exception:
+        raise HTTPException(status_code=503, detail="database unavailable")
+    return "ok"
 
 
 def main() -> None:

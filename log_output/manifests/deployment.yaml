@@ -25,7 +25,7 @@ spec:
                 path: "information.txt"
       containers:
         - name: log-output-server
-          image: drellxor/log-output:8.0
+          image: drellxor/log-output:9.0
           env:
             - name: MESSAGE
               valueFrom:
@@ -38,8 +38,17 @@ spec:
             - mountPath: /config
               name: config
               readOnly: true
+          ports:
+            - containerPort: 8000
+              name: http
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            httpGet:
+              port: http
+              path: /healthz
         - name: log-output-writer
-          image: drellxor/log-output:8.0
+          image: drellxor/log-output:9.0
           volumeMounts:
             - mountPath: /usr/src/app/files
               name: shared-volume
