@@ -2,17 +2,17 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: project-staging
 resources:
-  - namespace.yaml
-  - ../../base
+- namespace.yaml
+- ../../base
 patches:
-  - path: configmap.yaml
+- path: configmap.yaml
 images:
-  - name: PROJECT/APP
-    newName: europe-north1-docker.pkg.dev/dwk-gke-508413/dwk-repo/todo-app
-    newTag: main-c58d57d120bbe574071754b088a3661019c483ab
-  - name: PROJECT/BACKEND
-    newName: europe-north1-docker.pkg.dev/dwk-gke-508413/dwk-repo/todo-backend
-    newTag: main-c58d57d120bbe574071754b088a3661019c483ab
-  - name: PROJECT/BROADCASTER
-    newName: europe-north1-docker.pkg.dev/dwk-gke-508413/dwk-repo/todo-broadcaster
-    newTag: main-c58d57d120bbe574071754b088a3661019c483ab
+- name: PROJECT/APP
+  newName: europe-north1-docker.pkg.dev/dwk-gke-508413/dwk-repo/todo-app
+  newTag: main-d777e041b3ef97711aeda7d50d4d9bc7d74be48d
+- name: PROJECT/BACKEND
+  newName: europe-north1-docker.pkg.dev/dwk-gke-508413/dwk-repo/todo-backend
+  newTag: main-d777e041b3ef97711aeda7d50d4d9bc7d74be48d
+- name: PROJECT/BROADCASTER
+  newName: europe-north1-docker.pkg.dev/dwk-gke-508413/dwk-repo/todo-broadcaster
+  newTag: main-d777e041b3ef97711aeda7d50d4d9bc7d74be48d
