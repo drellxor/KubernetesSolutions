@@ -17,3 +17,7 @@ data:
   DB_PORT: "5432"
   DB_USER: "postgres"
   DB_PASSWORD: "postgres"
+  NATS_URL: "nats://my-nats.nats.svc.cluster.local:4222"
+  NATS_SUBJECT: "todos"
+  NATS_QUEUE_GROUP: "broadcaster"
+  TELEGRAM_API_URL: "https://api.telegram.org"

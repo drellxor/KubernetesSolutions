@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-broadcaster-dep
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: todo-broadcaster
+  template:
+    metadata:
+      labels:
+        app: todo-broadcaster
+    spec:
+      containers:
+        - name: todo-broadcaster
+          image: PROJECT/BROADCASTER
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: project-config
+            - secretRef:
+                name: telegram
+          resources:
+            requests:
+              cpu: "15m"
+              memory: "64Mi"
+            limits:
+              cpu: "100m"
+              memory: "256Mi"
+

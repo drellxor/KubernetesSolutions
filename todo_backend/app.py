@@ -1,11 +1,13 @@
 """Todo backend: stores the todo items."""
 
 import asyncio
+import json
 import logging
 import os
 from contextlib import asynccontextmanager
 
 import asyncpg
+import nats
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.exception_handlers import request_validation_exception_handler
@@ -21,6 +23,9 @@ DB_PORT = int(os.getenv("DB_PORT", 5432))
 DB_NAME = os.getenv("DB_NAME", "todo")
 DB_USER = os.getenv("DB_USER", "postgres")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "postgres")
+
+NATS_URL = os.getenv("NATS_URL", "nats://my-nats.nats.svc.cluster.local:4222")
+NATS_SUBJECT = os.getenv("NATS_SUBJECT", "todos")
 
 CONNECT_ATTEMPTS = 10
 CONNECT_RETRY_SECONDS = 3
@@ -70,10 +75,34 @@ async def connect() -> asyncpg.Pool:
     return pool
 
 
+async def announce(action: str, todo: "Todo") -> None:
+    """Tell the broadcaster about a todo. Never fails the request.
+
+    A dropped message only costs a chat notification, so a broken NATS is
+    logged and ignored rather than turned into a 500.
+    """
+    message = {"action": action, "id": todo.id, "todo": todo.todo, "done": todo.done}
+    try:
+        if app.state.nats is None:
+            raise RuntimeError("not connected")
+        await app.state.nats.publish(NATS_SUBJECT, json.dumps(message).encode())
+    except Exception as error:
+        logger.warning("Could not publish to NATS: %s", error)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.pool = await connect()
+    try:
+        app.state.nats = await nats.connect(NATS_URL)
+    except Exception as error:
+        logger.warning("Could not connect to NATS: %s", error)
+        app.state.nats = None
+
     yield
+
+    if app.state.nats is not None:
+        await app.state.nats.close()
     await app.state.pool.close()
 
 
@@ -135,8 +164,10 @@ async def create_todo(new_todo: NewTodo) -> Todo:
     row = await app.state.pool.fetchrow(
         "INSERT INTO todos (todo) VALUES ($1) RETURNING id, todo, done", new_todo.todo
     )
-    logger.info("Created todo: %r", new_todo.todo)
-    return Todo(**dict(row))
+    todo = Todo(**dict(row))
+    logger.info("Created todo: %r", todo.todo)
+    await announce("created", todo)
+    return todo
 
 
 @app.put("/todos/{todo_id}")
@@ -149,8 +180,10 @@ async def update_todo(todo_id: int, update: TodoUpdate) -> Todo:
     if row is None:
         raise HTTPException(status_code=404, detail="no such todo")
 
-    logger.info("Todo %s marked %s", todo_id, "done" if update.done else "not done")
-    return Todo(**dict(row))
+    todo = Todo(**dict(row))
+    logger.info("Todo %s marked %s", todo_id, "done" if todo.done else "not done")
+    await announce("updated", todo)
+    return todo
 
 
 def main() -> None:

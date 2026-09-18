@@ -11,6 +11,7 @@ resources:
   - todo_backend/manifests/service.yaml
   - todo_backend/manifests/statefulset.yaml
   - todo_backend/manifests/cronjob.yaml
+  - broadcaster/manifests/deployment.yaml
   - todo_app/manifests/httproute.yaml
 images:
   - name: PROJECT/APP
@@ -19,3 +20,5 @@ images:
   - name: PROJECT/BACKEND
     newName: drellxor/todo-backend
     newTag: "7.0"
+  - name: PROJECT/BROADCASTER
+    newName: drellxor/todo-broadcaster
