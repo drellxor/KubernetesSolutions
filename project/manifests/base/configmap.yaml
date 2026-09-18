@@ -21,3 +21,4 @@ data:
   NATS_SUBJECT: "todos"
   NATS_QUEUE_GROUP: "broadcaster"
   TELEGRAM_API_URL: "https://api.telegram.org"
+  BROADCAST_TARGET: "telegram"

@@ -1,4 +1,10 @@
-"""Broadcaster: forwards todo events from NATS to a Telegram chat."""
+"""Broadcaster: forwards todo events from NATS to a Telegram chat.
+
+Set BROADCAST_TARGET=log to keep the messages in the log instead, which is
+what staging does. The choice is explicit rather than inferred from missing
+credentials, so a mistyped secret cannot quietly turn production into a
+log-only deployment.
+"""
 
 import asyncio
 import json
@@ -18,6 +24,9 @@ NATS_QUEUE_GROUP = os.getenv("NATS_QUEUE_GROUP", "broadcaster")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
 TELEGRAM_API_URL = os.getenv("TELEGRAM_API_URL", "https://api.telegram.org")
+
+BROADCAST_TARGET = os.getenv("BROADCAST_TARGET", "telegram").lower()
+VALID_TARGETS = ("telegram", "log")
 
 TIMEOUT_SECONDS = 10
 
@@ -44,8 +53,15 @@ async def send_to_telegram(client: httpx.AsyncClient, text: str) -> None:
 
 
 async def main() -> None:
-    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+    if BROADCAST_TARGET not in VALID_TARGETS:
+        raise SystemExit(
+            f"BROADCAST_TARGET must be one of {VALID_TARGETS}, got {BROADCAST_TARGET!r}"
+        )
+
+    if BROADCAST_TARGET == "telegram" and not (TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID):
         raise SystemExit("TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID are required")
+
+    logger.info("Broadcasting to %s", BROADCAST_TARGET)
 
     connection = await nats.connect(NATS_URL)
     logger.info("Connected to %s, subscribing to %r", NATS_URL, NATS_SUBJECT)
@@ -65,6 +81,10 @@ async def main() -> None:
                 return
 
             text = describe(event)
+            if BROADCAST_TARGET == "log":
+                logger.info("Would send: %s", text)
+                return
+
             try:
                 await send_to_telegram(client, text)
             except httpx.HTTPError as error:

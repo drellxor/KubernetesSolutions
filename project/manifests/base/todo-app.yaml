@@ -47,3 +47,16 @@ spec:
             httpGet:
               port: 3000
               path: /healthz
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-app-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: todo-app
+  ports:
+    - port: 2347
+      protocol: TCP
+      targetPort: 3000
