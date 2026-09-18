@@ -72,3 +72,4 @@ jobs:
         with:
           add: './exercises/kustomization.yaml'
           message: New exercises version released ${{ github.sha }}
+          pull: '--rebase --autostash'

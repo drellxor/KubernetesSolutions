@@ -77,3 +77,5 @@ jobs:
         with:
           add: './project/kustomization.yaml'
           message: New project version released ${{ github.sha }}
+          pull: '--rebase --autostash'
+
