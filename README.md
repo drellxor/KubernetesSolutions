@@ -113,3 +113,4 @@ filtering on that and summing gives the pod count.
 - [4.7.](https://github.com/drellxor/KubernetesSolutions/tree/4.7/exercises)
 - [4.8.](https://github.com/drellxor/KubernetesSolutions/tree/4.8/project)
 - [4.9.](https://github.com/drellxor/KubernetesSolutions/tree/4.9/project/manifests)
+- [4.10.](https://github.com/drellxor/KubernetesSolutionsConfig)
