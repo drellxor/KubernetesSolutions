@@ -7,15 +7,19 @@ course.
 ## Layout
 
 ```
-exercises/     log output, ping-pong and their manifests
-project/       the todo app, its backend and broadcaster, plus a kustomization
+exercises/     log output, ping-pong, and their manifests
+project/       the todo app, its backend and broadcaster — code only
 monitoring/    Helm values for the Prometheus and Grafana stack
 ```
 
-Each application directory holds its own `manifests/`; the shared objects for a
-namespace live in `exercises/manifests/` and `project/manifests/`.
+The project's Kubernetes configuration lives in a separate repository,
+[KubernetesSolutionsConfig](https://github.com/drellxor/KubernetesSolutionsConfig),
+so that configuration and code have separate histories. This repository builds
+and publishes the images; the pipeline then writes the new tags into the
+matching overlay there, and Argo CD syncs from that repository.
 
-The project deploys as a whole with `kubectl apply -k project`.
+The exercises still keep their manifests here and deploy with
+`kubectl apply -k exercises`.
 
 ## Database: Cloud SQL or self-hosted Postgres
 

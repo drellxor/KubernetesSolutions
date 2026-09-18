@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: project-config
-data:
-  BROADCAST_TARGET: "log"
-  NATS_SUBJECT: "todos-staging"

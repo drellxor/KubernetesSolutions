@@ -72,17 +72,20 @@ jobs:
           docker push $BACKEND_IMAGE_TAG
           docker push $BROADCASTER_IMAGE_TAG
 
-      - name: Checkout main to commit the tag back
+      - name: Checkout the configuration repository
         uses: actions/checkout@v6
         with:
+          repository: drellxor/KubernetesSolutionsConfig
           ref: main
+          path: config
+          token: ${{ secrets.CONFIG_REPO_TOKEN }}
 
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v3
 
       - name: Use right image
         run: |-
-          cd project/manifests/${OVERLAY}
+          cd config/project/${OVERLAY}
           kustomize edit set image PROJECT/APP=$APP_IMAGE_TAG
           kustomize edit set image PROJECT/BACKEND=$BACKEND_IMAGE_TAG
           kustomize edit set image PROJECT/BROADCASTER=$BROADCASTER_IMAGE_TAG
@@ -90,7 +93,8 @@ jobs:
       - name: Commit Kustomization.yaml to Github
         uses: EndBug/add-and-commit@v10
         with:
-          add: './project/manifests/${{env.OVERLAY}}/kustomization.yaml'
+          cwd: './config'
+          add: './project/${{env.OVERLAY}}/kustomization.yaml'
           message: New project version released ${{env.IMAGE_TAG_SUFFIX}}
           pull: '--rebase --autostash'
 
