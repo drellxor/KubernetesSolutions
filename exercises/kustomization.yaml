@@ -15,7 +15,7 @@ resources:
 images:
 - name: EXERCISES/LOGOUTPUT
   newName: europe-north1-docker.pkg.dev/dwk-gke-508413/dwk-repo/log-output
-  newTag: main-0cbf3b5f6c91ddad9c557289543e83ea2cef6afe
+  newTag: main-a0a2473b27304ca5e3901db2f958f932539d51da
 - name: EXERCISES/PINGPONG
   newName: europe-north1-docker.pkg.dev/dwk-gke-508413/dwk-repo/ping-pong
-  newTag: main-0cbf3b5f6c91ddad9c557289543e83ea2cef6afe
+  newTag: main-a0a2473b27304ca5e3901db2f958f932539d51da
