@@ -4,6 +4,19 @@ My exercise solutions for the University of Helsinki
 [DevOps with Kubernetes 2026](https://courses.mooc.fi/org/uh-cs/courses/devops-with-kubernetes-2026)
 course.
 
+## Layout
+
+```
+exercises/     log output, ping-pong and their manifests
+project/       the todo app, its backend and broadcaster, plus a kustomization
+monitoring/    Helm values for the Prometheus and Grafana stack
+```
+
+Each application directory holds its own `manifests/`; the shared objects for a
+namespace live in `exercises/manifests/` and `project/manifests/`.
+
+The project deploys as a whole with `kubectl apply -k project`.
+
 ## Database: Cloud SQL or self-hosted Postgres
 
 | | Cloud SQL (DBaaS) | Postgres in the cluster |

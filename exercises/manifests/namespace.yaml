@@ -4,10 +4,3 @@ metadata:
   name: exercises
   labels:
     name: exercises
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: project
-  labels:
-    name: project

@@ -32,13 +32,13 @@ comes up.
 Start a database, write a config file pointing at it, then:
 
 ```sh
-pip install -r ping_pong/requirements.txt
-CONFIG_FILE=./ping_pong_db.config SERVER_PORT=3000 python3 ping_pong/app.py
+pip install -r exercises/ping_pong/requirements.txt
+CONFIG_FILE=./ping_pong_db.config SERVER_PORT=3000 python3 exercises/ping_pong/app.py
 ```
 
 ## Run with Docker
 
 ```sh
-docker build -t ping-pong ping_pong
+docker build -t ping-pong exercises/ping_pong
 docker run --rm -v "$PWD/config:/config:ro" -e SERVER_PORT=3000 -p 3000:3000 ping-pong
 ```

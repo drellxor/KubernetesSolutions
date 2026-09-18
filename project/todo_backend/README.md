@@ -42,13 +42,13 @@ WARNING:  Rejected todo (150 characters): 'xxx…' — String should have at mos
 Start a database, then:
 
 ```sh
-pip install -r todo_backend/requirements.txt
-DB_HOST=localhost SERVER_PORT=3000 python3 todo_backend/app.py
+pip install -r project/todo_backend/requirements.txt
+DB_HOST=localhost SERVER_PORT=3000 python3 project/todo_backend/app.py
 ```
 
 ## Run with Docker
 
 ```sh
-docker build -t todo-backend todo_backend
+docker build -t todo-backend project/todo_backend
 docker run --rm -e SERVER_PORT=3000 -e DB_HOST=... -p 3000:3000 todo-backend
 ```

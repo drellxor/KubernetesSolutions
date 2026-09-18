@@ -25,7 +25,7 @@ spec:
                 path: "information.txt"
       containers:
         - name: log-output-server
-          image: drellxor/log-output:9.0
+          image: EXERCISES/LOGOUTPUT
           env:
             - name: MESSAGE
               valueFrom:
@@ -48,7 +48,7 @@ spec:
               port: http
               path: /healthz
         - name: log-output-writer
-          image: drellxor/log-output:9.0
+          image: EXERCISES/LOGOUTPUT
           volumeMounts:
             - mountPath: /usr/src/app/files
               name: shared-volume

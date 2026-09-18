@@ -19,13 +19,13 @@ cached on disk and refreshed when it is more than 10 minutes old.
 ## Run locally
 
 ```sh
-pip install -r todo_app/requirements.txt
-IMAGE_FILE=/tmp/image.jpg PORT=3000 python3 todo_app/app.py
+pip install -r project/todo_app/requirements.txt
+IMAGE_FILE=/tmp/image.jpg PORT=3000 python3 project/todo_app/app.py
 ```
 
 ## Run with Docker
 
 ```sh
-docker build -t todo-app todo_app
+docker build -t todo-app project/todo_app
 docker run --rm -e PORT=3000 -p 3000:3000 todo-app
 ```

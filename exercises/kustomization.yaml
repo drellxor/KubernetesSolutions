@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: exercises
+resources:
+  - manifests/namespace.yaml
+  - manifests/configmap.yaml
+  - manifests/persistentvolumeclaim-gke.yaml
+  - manifests/gateway.yaml
+  - manifests/httproute.yaml
+  - log_output/manifests/deployment.yaml
+  - log_output/manifests/service.yaml
+  - ping_pong/manifests/rollout.yaml
+  - ping_pong/manifests/service.yaml
+  - ping_pong/manifests/statefulset.yaml
+images:
+  - name: EXERCISES/LOGOUTPUT
+    newName: drellxor/log-output
+  - name: EXERCISES/PINGPONG
+    newName: drellxor/ping-pong

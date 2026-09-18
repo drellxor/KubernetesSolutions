@@ -16,7 +16,7 @@ to exactly one of them. Scaling up spreads the work rather than duplicating it.
 ## Run with Docker
 
 ```sh
-docker build -t broadcaster broadcaster
+docker build -t broadcaster project/broadcaster
 docker run --rm \
   -e NATS_URL=nats://... \
   -e TELEGRAM_BOT_TOKEN=... -e TELEGRAM_CHAT_ID=... \

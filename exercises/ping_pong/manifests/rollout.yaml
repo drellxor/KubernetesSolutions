@@ -29,7 +29,7 @@ spec:
                 path: ping_pong_db.config
       containers:
         - name: ping-pong
-          image: drellxor/ping-pong:8.0
+          image: EXERCISES/PINGPONG
           volumeMounts:
             - mountPath: /config
               name: config

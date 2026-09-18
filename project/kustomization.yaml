@@ -2,9 +2,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: project
 resources:
-  - generic_manifests/configmap-project.yaml
-  - generic_manifests/persistentvolumeclaim-project-gke.yaml
-  - generic_manifests/gateway-project.yaml
+  - manifests/configmap.yaml
+  - manifests/persistentvolumeclaim-gke.yaml
+  - manifests/gateway.yaml
+  - manifests/httproute.yaml
   - todo_app/manifests/deployment.yaml
   - todo_app/manifests/service.yaml
   - todo_backend/manifests/deployment.yaml
@@ -12,7 +13,6 @@ resources:
   - todo_backend/manifests/statefulset.yaml
   - todo_backend/manifests/cronjob.yaml
   - broadcaster/manifests/deployment.yaml
-  - todo_app/manifests/httproute.yaml
 images:
   - name: PROJECT/APP
     newName: drellxor/todo-app

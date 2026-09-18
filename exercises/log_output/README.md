@@ -34,15 +34,15 @@ Ping / Pongs: 3
 ## Run locally
 
 ```sh
-pip install -r log_output/requirements.txt
-LOG_FILE=/tmp/log.txt python3 log_output/writer.py &
-LOG_FILE=/tmp/log.txt PORT=3000 python3 log_output/server.py
+pip install -r exercises/log_output/requirements.txt
+LOG_FILE=/tmp/log.txt python3 exercises/log_output/writer.py &
+LOG_FILE=/tmp/log.txt PORT=3000 python3 exercises/log_output/server.py
 ```
 
 ## Run with Docker
 
 ```sh
-docker build -t log-output log_output
+docker build -t log-output exercises/log_output
 docker volume create log-output-files
 
 docker run -d -v log-output-files:/usr/src/app/files log-output python3 writer.py
