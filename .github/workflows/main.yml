@@ -9,6 +9,10 @@ permissions:
   contents: write
   id-token: write
 
+concurrency:
+  group: project-release
+  cancel-in-progress: false
+
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   REGISTRY: europe-north1-docker.pkg.dev
