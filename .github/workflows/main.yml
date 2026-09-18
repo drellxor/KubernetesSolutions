@@ -3,32 +3,27 @@ name: Release application
 on:
   push:
     branches:
-      - '**'
+      - 'main'
     paths:
       - 'project/**'
       - '.github/workflows/main.yml'
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-  GKE_CLUSTER: dwk-cluster
-  GKE_ZONE: europe-north1-b
   REGISTRY: europe-north1-docker.pkg.dev
   REPOSITORY: dwk-repo
   APP_IMAGE: todo-app
   BACKEND_IMAGE: todo-backend
-  APP_DEP: todo-app-dep
-  BACKEND_DEP: todo-backend-dep
   BROADCASTER_IMAGE: todo-broadcaster
-  BROADCASTER_DEP: todo-broadcaster-dep
   BRANCH: ${{ github.ref_name }}
 
 jobs:
   build-publish-deploy:
-    name: Build, Publish and Deploy
+    name: Build and publish project
     runs-on: ubuntu-latest
     environment: GKE_PROJECT
 
@@ -48,13 +43,6 @@ jobs:
         run: gcloud info
 
       - run: gcloud --quiet auth configure-docker $REGISTRY
-
-      - name: 'Get GKE credentials'
-        uses: 'google-github-actions/get-gke-credentials@v3'
-        with:
-          cluster_name: '${{ env.GKE_CLUSTER }}'
-          project_id: '${{ env.PROJECT_ID }}'
-          location: '${{ env.GKE_ZONE }}'
 
       - name : 'Form the image name'
         run: |-
@@ -77,19 +65,15 @@ jobs:
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v3
 
-      - name: Deploy
+      - name: Use right image
         run: |-
-          NS=${GITHUB_REF#refs/heads/}
-          [ "$NS" = "main" ] && NS=project
           cd project
-          kubectl create namespace ${NS} || true
-          kubectl config set-context --current --namespace=${NS}
-          kustomize edit set namespace ${NS}
           kustomize edit set image PROJECT/APP=$APP_IMAGE_TAG
           kustomize edit set image PROJECT/BACKEND=$BACKEND_IMAGE_TAG
           kustomize edit set image PROJECT/BROADCASTER=$BROADCASTER_IMAGE_TAG
-          kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment $APP_DEP
-          kubectl rollout status deployment $BACKEND_DEP
-          kubectl rollout status deployment $BROADCASTER_DEP
-          kubectl get services -o wide
+
+      - name: Commit Kustomization.yaml to Github
+        uses: EndBug/add-and-commit@v10
+        with:
+          add: './project/kustomization.yaml'
+          message: New project version released ${{ github.sha }}

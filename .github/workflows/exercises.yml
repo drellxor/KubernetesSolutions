@@ -14,8 +14,6 @@ permissions:
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-  GKE_CLUSTER: dwk-cluster
-  GKE_ZONE: europe-north1-b
   REGISTRY: europe-north1-docker.pkg.dev
   REPOSITORY: dwk-repo
   LOG_OUTPUT_IMAGE: log-output
@@ -24,7 +22,7 @@ env:
 
 jobs:
   build-publish-deploy:
-    name: Build, Publish and Deploy
+    name: Build and Publish exercises
     runs-on: ubuntu-latest
     environment: GKE_PROJECT
 
@@ -44,13 +42,6 @@ jobs:
         run: gcloud info
 
       - run: gcloud --quiet auth configure-docker $REGISTRY
-
-      - name: 'Get GKE credentials'
-        uses: 'google-github-actions/get-gke-credentials@v3'
-        with:
-          cluster_name: '${{ env.GKE_CLUSTER }}'
-          project_id: '${{ env.PROJECT_ID }}'
-          location: '${{ env.GKE_ZONE }}'
 
       - name : 'Form the image name'
         run: |-
