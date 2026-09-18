@@ -106,3 +106,4 @@ filtering on that and summing gives the pod count.
 - [4.4.](https://github.com/drellxor/KubernetesSolutions/tree/4.4/ping_pong/manifests)
 - [4.5.](https://github.com/drellxor/KubernetesSolutions/tree/4.5/todo_app)
 - [4.6.](https://github.com/drellxor/KubernetesSolutions/tree/4.6/broadcaster)
+- [4.7.](https://github.com/drellxor/KubernetesSolutions/tree/4.7/exercises)
