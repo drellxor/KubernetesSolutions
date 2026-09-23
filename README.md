@@ -133,3 +133,4 @@ three reviews versions show up side by side.
 - [5.3.](https://github.com/drellxor/KubernetesSolutions/tree/5.3/exercises)
 - [5.4.](https://github.com/drellxor/KubernetesSolutions/tree/5.4/exercises/wikipedia)
 - [5.6.](https://github.com/drellxor/KubernetesSolutions/tree/5.6/exercises/knative)
+- [5.7.](https://github.com/drellxor/KubernetesSolutions/tree/5.7/exercises/ping_pong)
