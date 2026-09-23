@@ -5,14 +5,19 @@ from pathlib import Path
 import httpx
 
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.responses import PlainTextResponse
 
 DEFAULT_PORT = 8000
 LOG_FILE = Path(os.getenv("LOG_FILE", "/usr/src/app/files/log.txt"))
 CONFIG_FILE = Path(os.getenv("CONFIG_FILE", "/config/information.txt"))
 MESSAGE = os.getenv("MESSAGE", '')
-PING_PONG_URL = os.getenv("PING_PONG_URL", "http://ping-pong-svc/pings")
+# ping-pong is a Knative service, routed by Host header, so use its full name.
+PING_PONG_URL = os.getenv(
+    "PING_PONG_URL", "http://ping-pong.exercises.svc.cluster.local/pings"
+)
+# Long enough for ping-pong to start from zero.
+PING_PONG_TIMEOUT_SECONDS = 30
 GREETER_URL = os.getenv("GREETER_URL", "http://greeter-svc/")
 app = FastAPI(title="log-output")
 
@@ -33,7 +38,7 @@ def config_file_content() -> str:
 
 async def pingpong_count() -> int:
     try:
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=PING_PONG_TIMEOUT_SECONDS) as client:
             response = await client.get(PING_PONG_URL)
             response.raise_for_status()
         return int(response.text)
@@ -53,16 +58,8 @@ async def greeting() -> str:
 
 @app.get("/healthz", response_class=PlainTextResponse)
 async def healthz() -> str:
-    """Ready only while ping-pong is reachable, so failures are not hidden."""
-    try:
-        async with httpx.AsyncClient(timeout=5) as client:
-            response = await client.get(PING_PONG_URL)
-            response.raise_for_status()
-    except httpx.HTTPError as error:
-        raise HTTPException(
-            status_code=503, detail="ping-pong unavailable"
-        ) from error
-
+    """Checks this server only. Probing ping-pong every few seconds would keep
+    it from ever scaling to zero; the status page shows it as 0 when down."""
     return "ok"
 
 

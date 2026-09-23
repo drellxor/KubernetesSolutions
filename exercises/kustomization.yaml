@@ -10,8 +10,7 @@ resources:
 - manifests/waypoint.yaml
 - log_output/manifests/deployment.yaml
 - log_output/manifests/service.yaml
-- ping_pong/manifests/deployment.yaml
-- ping_pong/manifests/service.yaml
+- ping_pong/manifests/knative-service.yaml
 - ping_pong/manifests/statefulset.yaml
 - greeter/manifests/deployment.yaml
 - greeter/manifests/service.yaml
@@ -25,7 +24,9 @@ images:
   newName: exercises/log-output
   newTag: local
 - name: EXERCISES/PINGPONG
-  newName: exercises/ping-pong
+  # Knative resolves image tags to digests through the registry unless the
+  # registry is dev.local, and this image is in no registry.
+  newName: dev.local/exercises/ping-pong
   newTag: local
 - name: EXERCISES/GREETER
   newName: exercises/greeter

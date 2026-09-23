@@ -44,3 +44,20 @@ the Host header picks the service.
 - **Traffic splitting:** changing `TARGET` created `hello-00002`, and
   `hello.yaml` splits traffic 50/50 between it and `hello-00001`. 200 requests
   came back 103 `Hello Knative!` and 97 `Hello World!`.
+
+## On the Istio cluster
+
+Ping-pong is a Knative service on the main k3d cluster too, next to Istio. Same
+Serving release, but Kourier's external Service is made ClusterIP, since
+hello-gateway already holds port 80 on the nodes, and there is no magic DNS:
+ping-pong is cluster-local.
+
+```sh
+B=https://github.com/knative
+kubectl apply -f $B/serving/releases/download/knative-v1.23.0/serving-crds.yaml
+kubectl apply -f $B/serving/releases/download/knative-v1.23.0/serving-core.yaml
+curl -sL $B/net-kourier/releases/download/knative-v1.23.0/kourier.yaml \
+  | sed 's/type: LoadBalancer/type: ClusterIP/' | kubectl apply -f -
+kubectl patch configmap/config-network -n knative-serving --type merge \
+  -p '{"data":{"ingress-class":"kourier.ingress.networking.knative.dev"}}'
+```

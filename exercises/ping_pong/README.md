@@ -22,6 +22,19 @@ password=postgres
 The app creates its `pingpong` table on startup, retrying while the database
 comes up.
 
+## Serverless
+
+In the cluster it runs as a Knative Service (`manifests/knative-service.yaml`),
+so it scales to zero when idle and starts again on the next request; the count
+survives because it lives in Postgres. It is cluster-local, at
+`http://ping-pong.exercises.svc.cluster.local`. Knative routes by Host header,
+so callers must use that full name, and the exercises gateway rewrites the Host
+for `/pingpong`.
+
+The image is named `dev.local/exercises/ping-pong`: Knative looks up every
+image tag in its registry unless the registry is `dev.local`, and this image
+is built locally and loaded with `k3d image import`.
+
 ## Endpoints
 
 - `GET /` and `GET /pingpong` — plain text `pong N`, and increments the count.

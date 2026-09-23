@@ -18,14 +18,17 @@ spec:
     - path:
         type: PathPrefix
         value: /pingpong
+    # ping-pong is a Knative service: its Service points at Kourier, which
+    # picks the app by Host header, so the rewrite sets it.
     filters:
       - type: URLRewrite
         urlRewrite:
+          hostname: ping-pong.exercises.svc.cluster.local
           path:
             type: ReplacePrefixMatch
             replacePrefixMatch: /
     backendRefs:
-        - name: ping-pong-svc
+        - name: ping-pong
           port: 80
   - matches:
     - path:
