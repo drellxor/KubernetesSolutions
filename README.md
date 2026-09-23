@@ -56,6 +56,17 @@ sum(kube_pod_info{namespace='monitoring', created_by_kind='StatefulSet'})
 `kube_pod_info` carries one series per pod, labelled with `created_by_kind`, so
 filtering on that and summing gives the pod count.
 
+## Service mesh
+
+Istio in ambient mode on k3d, with the Bookinfo sample and a waypoint in the
+`default` namespace. Kiali reads from the Prometheus in the monitoring namespace:
+
+![Kiali's traffic graph for Bookinfo](docs/images/kiali-bookinfo-graph.png)
+
+ztunnel alone only carries TCP, so until the waypoint was added the graph showed
+nothing past the gateway. With it, every hop reports HTTP requests, and the
+three reviews versions show up side by side.
+
 ## Exercises
 
 ### Chapter 2
@@ -118,3 +129,4 @@ filtering on that and summing gives the pod count.
 ### Chapter 6
 
 - [5.1.](https://github.com/drellxor/KubernetesSolutions/tree/5.1/exercises/dummysite)
+- [5.2.](https://github.com/drellxor/KubernetesSolutions/tree/5.2#service-mesh)
