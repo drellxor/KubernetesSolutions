@@ -1,0 +1,23 @@
+# The Knative getting-started examples, as YAML rather than kn commands.
+# Changing TARGET from World created revision hello-00002; traffic is split
+# evenly between it and the original hello-00001.
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: hello
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+        - image: ghcr.io/knative/helloworld-go:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TARGET
+              value: Knative
+  traffic:
+    - latestRevision: true
+      percent: 50
+    - revisionName: hello-00001
+      percent: 50
