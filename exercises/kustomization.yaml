@@ -16,6 +16,8 @@ resources:
 - greeter/manifests/deployment.yaml
 - greeter/manifests/service.yaml
 - greeter/manifests/httproute.yaml
+- wikipedia/manifests/deployment.yaml
+- wikipedia/manifests/service.yaml
 # Built locally and loaded with `k3d image import`; a fixed non-latest tag keeps
 # imagePullPolicy at IfNotPresent, so the nodes never try a registry.
 images:

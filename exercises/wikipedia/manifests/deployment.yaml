@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wikipedia-dep
+  namespace: exercises
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wikipedia
+  template:
+    metadata:
+      labels:
+        app: wikipedia
+    spec:
+      volumes:
+        - name: www
+          emptyDir: {}
+      # Pages are saved to a temp file and renamed into place, so nginx never
+      # serves a half-written one. The <base> tag makes the page's root-relative
+      # links (styles, images) load from Wikipedia instead of 404ing here.
+      initContainers:
+        - name: fetch-kubernetes
+          image: curlimages/curl:8.16.0
+          env:
+            - name: USER_AGENT
+              value: KubernetesSolutions-exercise/1.0 (https://github.com/drellxor/KubernetesSolutions)
+          volumeMounts:
+            - mountPath: /www
+              name: www
+          command:
+            - sh
+            - -ec
+            - |
+              curl -sfL -A "$USER_AGENT" -o /www/.page https://en.wikipedia.org/wiki/Kubernetes
+              sed -i 's|<head>|<head><base href="https://en.wikipedia.org/">|' /www/.page
+              mv /www/.page /www/index.html
+      containers:
+        - name: nginx
+          image: nginx:1.29-alpine
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html
+              name: www
+              readOnly: true
+          ports:
+            - containerPort: 80
+              name: http
+          readinessProbe:
+            periodSeconds: 5
+            httpGet:
+              port: http
+              path: /
+        - name: fetch-random
+          image: curlimages/curl:8.16.0
+          env:
+            - name: USER_AGENT
+              value: KubernetesSolutions-exercise/1.0 (https://github.com/drellxor/KubernetesSolutions)
+          volumeMounts:
+            - mountPath: /www
+              name: www
+          command:
+            - sh
+            - -c
+            - |
+              # sh as PID 1 ignores SIGTERM; exit on it, or every shutdown
+              # waits out the grace period. sleep runs in the background so
+              # the trap can fire mid-wait.
+              trap 'exit 0' TERM
+              while true; do
+                wait=$((300 + RANDOM % 601))
+                echo "next page in ${wait}s"
+                sleep "$wait" & wait $!
+                if page=$(curl -sfL -A "$USER_AGENT" -o /www/.page -w '%{url_effective}' https://en.wikipedia.org/wiki/Special:Random); then
+                  sed -i 's|<head>|<head><base href="https://en.wikipedia.org/">|' /www/.page
+                  mv /www/.page /www/index.html
+                  echo "now serving $page"
+                else
+                  echo "fetch failed, keeping the current page"
+                fi
+              done
