@@ -130,3 +130,4 @@ three reviews versions show up side by side.
 
 - [5.1.](https://github.com/drellxor/KubernetesSolutions/tree/5.1/exercises/dummysite)
 - [5.2.](https://github.com/drellxor/KubernetesSolutions/tree/5.2#service-mesh)
+- [5.3.](https://github.com/drellxor/KubernetesSolutions/tree/5.3/exercises)
