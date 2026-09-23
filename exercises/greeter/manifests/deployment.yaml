@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: greeter-v1
+  namespace: exercises
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: greeter
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: greeter
+        version: v1
+    spec:
+      containers:
+        - name: greeter
+          image: EXERCISES/GREETER
+          env:
+            - name: GREETING
+              value: Hello from version 1
+          ports:
+            - containerPort: 8000
+              name: http
+          readinessProbe:
+            periodSeconds: 5
+            httpGet:
+              port: http
+              path: /healthz
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: greeter-v2
+  namespace: exercises
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: greeter
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: greeter
+        version: v2
+    spec:
+      containers:
+        - name: greeter
+          image: EXERCISES/GREETER
+          env:
+            - name: GREETING
+              value: Hello from version 2
+          ports:
+            - containerPort: 8000
+              name: http
+          readinessProbe:
+            periodSeconds: 5
+            httpGet:
+              port: http
+              path: /healthz

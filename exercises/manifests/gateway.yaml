@@ -3,8 +3,12 @@ kind: Gateway
 metadata:
   name: log-output-gateway
   namespace: exercises
+  annotations:
+    # hello-gateway already holds port 80 on the k3d nodes; reach this one
+    # with kubectl port-forward instead.
+    networking.istio.io/service-type: ClusterIP
 spec:
-  gatewayClassName: gke-l7-global-external-managed
+  gatewayClassName: istio
   listeners:
   - name: http
     protocol: HTTP

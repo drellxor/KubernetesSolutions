@@ -7,15 +7,24 @@ resources:
 - manifests/persistentvolumeclaim-gke.yaml
 - manifests/gateway.yaml
 - manifests/httproute.yaml
+- manifests/waypoint.yaml
 - log_output/manifests/deployment.yaml
 - log_output/manifests/service.yaml
-- ping_pong/manifests/rollout.yaml
+- ping_pong/manifests/deployment.yaml
 - ping_pong/manifests/service.yaml
 - ping_pong/manifests/statefulset.yaml
+- greeter/manifests/deployment.yaml
+- greeter/manifests/service.yaml
+- greeter/manifests/httproute.yaml
+# Built locally and loaded with `k3d image import`; a fixed non-latest tag keeps
+# imagePullPolicy at IfNotPresent, so the nodes never try a registry.
 images:
 - name: EXERCISES/LOGOUTPUT
-  newName: europe-north1-docker.pkg.dev/dwk-gke-508413/dwk-repo/log-output
-  newTag: main-d092ceb370d583335d272bf9a1b3413564a3e667
+  newName: exercises/log-output
+  newTag: local
 - name: EXERCISES/PINGPONG
-  newName: europe-north1-docker.pkg.dev/dwk-gke-508413/dwk-repo/ping-pong
-  newTag: main-d092ceb370d583335d272bf9a1b3413564a3e667
+  newName: exercises/ping-pong
+  newTag: local
+- name: EXERCISES/GREETER
+  newName: exercises/greeter
+  newTag: local

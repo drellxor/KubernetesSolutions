@@ -13,6 +13,7 @@ LOG_FILE = Path(os.getenv("LOG_FILE", "/usr/src/app/files/log.txt"))
 CONFIG_FILE = Path(os.getenv("CONFIG_FILE", "/config/information.txt"))
 MESSAGE = os.getenv("MESSAGE", '')
 PING_PONG_URL = os.getenv("PING_PONG_URL", "http://ping-pong-svc/pings")
+GREETER_URL = os.getenv("GREETER_URL", "http://greeter-svc/")
 app = FastAPI(title="log-output")
 
 
@@ -40,6 +41,16 @@ async def pingpong_count() -> int:
         return 0
 
 
+async def greeting() -> str:
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(GREETER_URL)
+            response.raise_for_status()
+        return response.text
+    except httpx.HTTPError:
+        return "no greeting"
+
+
 @app.get("/healthz", response_class=PlainTextResponse)
 async def healthz() -> str:
     """Ready only while ping-pong is reachable, so failures are not hidden."""
@@ -61,6 +72,7 @@ async def read_status() -> str:
     return f"""file content: {config_file_content()}env variable: MESSAGE={MESSAGE}
 {latest_log_line()}.
 Ping / Pongs: {await pingpong_count()}
+greetings: {await greeting()}
 """
 
 

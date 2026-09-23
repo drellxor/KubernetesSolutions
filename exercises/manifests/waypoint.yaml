@@ -1,0 +1,15 @@
+# L7 proxy for the namespace. ztunnel alone only carries TCP, so the greeter
+# traffic split (an HTTPRoute on a Service) only takes effect through this.
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: waypoint
+  namespace: exercises
+  labels:
+    istio.io/waypoint-for: service
+spec:
+  gatewayClassName: istio-waypoint
+  listeners:
+  - name: mesh
+    port: 15008
+    protocol: HBONE

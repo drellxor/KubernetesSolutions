@@ -21,6 +21,8 @@ Both use the same image; the container's `command` selects which one runs.
   Both containers must agree on this path and mount the same volume there.
 - `COUNTER_FILE` — the ping-pong request count, written by the ping_pong app,
   default `/usr/src/app/files/pingpong.txt`.
+- `GREETER_URL` — where to fetch the greeting shown on the status page,
+  default `http://greeter-svc/`. Shows `no greeting` if it cannot be reached.
 
 ## Endpoints
 

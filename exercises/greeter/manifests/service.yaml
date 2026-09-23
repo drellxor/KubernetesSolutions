@@ -1,0 +1,42 @@
+# greeter-svc is what log-output calls. It selects both versions, but the
+# HTTPRoute attached to it decides the split, via the namespace's waypoint.
+apiVersion: v1
+kind: Service
+metadata:
+  name: greeter-svc
+  namespace: exercises
+spec:
+  selector:
+    app: greeter
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: greeter-svc-1
+  namespace: exercises
+spec:
+  selector:
+    app: greeter
+    version: v1
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: greeter-svc-2
+  namespace: exercises
+spec:
+  selector:
+    app: greeter
+    version: v2
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8000
